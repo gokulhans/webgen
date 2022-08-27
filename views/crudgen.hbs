@@ -54,12 +54,25 @@
     <div class="flex flex-wrap">
         <div class="md:w-1/2 px-12 text-lg flex flex-col">
             <div class="flex flex-col ">
-                <code class="font-bold text-green-600 bg-grey-500 p-3 rounded-md shadow-md my-2">{{app}} </code>
-                <cente class="my-2"> </cente>
-                <code class="bg-grey-500 p-3 rounded-md shadow-md my-2">npx express-generator --view=hbs {{app}}</code>
-                <code class="bg-grey-500 p-3 rounded-md shadow-md my-2">cd {{app}}</code>
-                <code class="bg-grey-500 p-3 rounded-md shadow-md my-2">npm i</code>
-                <code class="bg-grey-500 p-3 rounded-md shadow-md my-2">npm start</code>
+                <code onClick=CopyToClipboard('npmall')
+                    class="cursor-grab font-bold text-green-600 bg-grey-500 p-3 rounded-md shadow-md my-2">{{app}} </code>
+
+                <div id="npmall" class="flex flex-col">
+
+                    <code onClick=CopyToClipboard('npm1') id="npm1"
+                        class="cursor-grab bg-grey-500 p-3 rounded-md shadow-md my-2">npx express-generator --view=hbs {{app}}</code>
+                    <code onClick=CopyToClipboard('npm2') id="npm2"
+                        class="cursor-grab bg-grey-500 p-3 rounded-md shadow-md my-2">cd {{app}}</code>
+                    <code onClick=CopyToClipboard('npm3') id="npm3"
+                        class="cursor-grab bg-grey-500 p-3 rounded-md shadow-md my-2">npm i</code>
+                    <code onClick=CopyToClipboard('npm5') id="npm5"
+                        class="cursor-grab bg-grey-500 p-3 rounded-md shadow-md my-2">npm i mongodb express-session express-handlebars nodemon dotenv</code>
+                    <code onClick=CopyToClipboard('npm4') id="npm4"
+                        class="cursor-grab bg-grey-500 p-3 rounded-md shadow-md my-2">npm start</code>
+
+                </div>
+
+
 
                 <pre>
                 <code  class="shadow-sm bg-grey-100 text-xs rounded-xl ">
@@ -93,8 +106,6 @@ module.exports.get=function(){
                 </code>
                 </pre>
 
-
-
                 <pre>
                 <code  class="shadow-sm bg-grey-100 text-xs rounded-xl ">
                      <div class="flex items-center justify-between px-12">
@@ -104,25 +115,40 @@ module.exports.get=function(){
                     </div>
                     <div style="text-align: start; padding-left:20px;"  id="app.js">
 
-const mongoClient = require('mongodb').MongoClient
-const state = {
-    db:null
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
 }
-module.exports.connect = function(done){
-    const url= process.env.DATABASE_URL || "mongodb+srv://gokulhansv:GOk%409846@cluster0.gzlmt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-    const dbname='codesnippets'
 
-    mongoClient.connect(url,(err,data)=>{
-        if(err) return done(err)
-        state.db=data.db(dbname)
-        done() 
-    })
-}
-  
+const sessions = require('express-session');
+var db = require('./connection');
+const hbs = require('express-handlebars');
+{{#each data}}
+var {{this.name}}Router = require('./routes/{{this.name}}-routes');
+{{/each}}
 
-module.exports.get=function(){
-    return state.db
-}
+// view engine setup
+app.engine('hbs', hbs.engine({ extname: 'hbs', defaultLayout: 'layout', layoutsDir: __dirname + '/views/', partialsDir: __dirname + '/views/partials/' }))
+
+// creating 24 hours from milliseconds
+const oneDay = 1000 * 60 * 60 * 24;
+
+//session middleware
+app.use(sessions({
+  secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+  saveUninitialized: true,
+  cookie: { maxAge: oneDay },
+  resave: false
+}));
+
+db.connect((err) => {
+  if (err) console.log("Connection Error" + err);
+  else console.log("Database connected to port")
+})
+
+{{#each data}}
+app.use('/{{this.name}}s', {{this.name}}Router);
+{{/each}}
+
                     </div>
                 </code>
                 </pre>
@@ -144,7 +170,7 @@ module.exports.get=function(){
                 <code class="font-bold text-green-600 bg-grey-500 p-3 rounded-md shadow-md my-2">controllers</code>
                 <div class="flex flex-col items-start p-5">
                     {{#each data}}
-                    <p>{{this.name}}-controller.js</p>
+                    <p>{{this.name}}s-controller.js</p>
 
                     {{/each}}
                 </div>
@@ -196,14 +222,12 @@ module.exports.get=function(){
         const {{this.name}}sController = require("../controllers/{{this.name}}s-controller");
 
         router.get("/", {{this.name}}sController.getAll{{this.capname}}s);
-        router.get('/add', {{this.name}}sController.getAddform);
+        router.get('/add', {{this.name}}sController.get{{this.capname}}Addform);
         router.post("/add", {{this.name}}sController.add{{this.capname}});
-        router.get('/:id', {{this.name}}sController.getById);
-        router.get('/edit/:id', {{this.name}}sController.getEditform);
+        router.get('/edit/:id', {{this.name}}sController.get{{this.capname}}Editform);
         router.post("/edit", {{this.name}}sController.edit{{this.capname}});
+        router.get('/:id', {{this.name}}sController.get{{this.capname}}ById);
         router.delete("/:id", {{this.name}}sController.delete{{this.capname}});
-
-        router.put("/:id", {{this.name}}sController.update{{this.capname}});
 
         module.exports = router;
 </div>
@@ -217,9 +241,6 @@ module.exports.get=function(){
     </div>
 
 </div>
-
-
-
 
 
 
@@ -237,12 +258,16 @@ module.exports.get=function(){
                     </div>
 <div id="{{this.name}}">
 
+        const { ObjectId } = require('mongodb');
+        const db = require('../connection');
+
+
         const getAll{{this.capname}}s = async function (req, res) {
         let data = await db.get().collection('data').find().toArray()
         res.render('all{{this.name}}s',{data});
         }
 
-        const getAddform = async function (req, res) {
+        const get{{this.capname}}Addform = async function (req, res) {
         res.render('forms/add{{this.name}}');
         }
 
@@ -252,7 +277,7 @@ module.exports.get=function(){
         res.render('pages/{{this.name}}', { data })
         }
 
-        const getEditform = async function (req, res) {
+        const get{{this.capname}}Editform = async function (req, res) {
         let id = req.params.id
         let data = await db.get().collection('data').findOne({ _id: ObjectId(id) })
         res.render('forms/edit{{this.name}}', { data });
@@ -272,11 +297,19 @@ module.exports.get=function(){
         res.redirect('back')
         }
 
-        const getById = async function (req, res) {
+        const get{{this.capname}}ById = async function (req, res) {
         let id = req.params.id
         let data = await db.get().collection('data').findOne({ _id: ObjectId(id) })
         res.render('pages/{{this.name}}', { data });
         }
+
+        exports.getAll{{this.capname}}s = getAll{{this.capname}}s;
+        exports.get{{this.capname}}Addform = get{{this.capname}}Addform;
+        exports.add{{this.capname}} = add{{this.capname}};
+        exports.get{{this.capname}}Editform = get{{this.capname}}Editform;
+        exports.edit{{this.capname}} = edit{{this.capname}};
+        exports.delete{{this.capname}} = delete{{this.capname}};
+        exports.get{{this.capname}}ById = get{{this.capname}}ById;
 
 </div>
 
