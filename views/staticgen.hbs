@@ -1,6 +1,6 @@
 
 
-<form class="flex flex-col max-w-md shadow-lg bg-grey-300 p-5 rounded-xl" action="/addpage" method="post">
+<form class="flex flex-col max-w-md shadow-lg bg-grey-300 p-5 rounded-xl" action="/addstaticgen" method="post">
 <center class="m-5 font-bold text-lg"> Pages Generater </center>
     <div class="flex flex-col ">
         <input class="p-2 my-1 border" type="text" name="name" value="" placeholder="Route name...">
@@ -9,10 +9,13 @@
 
 </form>
 
+
 <pre><code>
 
 {{#each data}}
-   <h1>{{this.name}}</h1>
+    router.get('/{{this.name}}', function (req, res) {
+        res.render('{{this.name}}');
+      });
 {{/each}}
 
 </code></pre>
