@@ -62,12 +62,14 @@
                 <code class="bg-grey-500 p-3 rounded-md shadow-md my-2">npm start</code>
 
                 <pre>
-                <code id="mongodb" class="shadow-sm bg-grey-100 text-xs rounded-xl ">
+                <code  class="shadow-sm bg-grey-100 text-xs rounded-xl ">
                      <div class="flex items-center justify-between px-12">
                         <center class="font-bold text-xl">connection.js</center>
                             <button class=" text-lg text-green-500 font-bold" onClick=CopyToClipboard('mongodb') >copy</button>
                           
                     </div>
+                    <div style="text-align: start; padding-left:20px;" id="mongodb">
+
 const mongoose = require("mongoose");
 
 const connectDB = async () => {
@@ -82,6 +84,41 @@ const connectDB = async () => {
   }
 };
 module.exports = connectDB;
+                    </div>
+                </code>
+                </pre>
+
+
+
+                <pre>
+                <code  class="shadow-sm bg-grey-100 text-xs rounded-xl ">
+                     <div class="flex items-center justify-between px-12">
+                        <center class="font-bold text-xl">Codes to add in app.js</center>
+                            <button class=" text-lg text-green-500 font-bold" onClick=CopyToClipboard('app.js') >copy</button>
+                          
+                    </div>
+                    <div style="text-align: start; padding-left:20px;"  id="app.js">
+
+const mongoClient = require('mongodb').MongoClient
+const state = {
+    db:null
+}
+module.exports.connect = function(done){
+    const url= process.env.DATABASE_URL || "mongodb+srv://gokulhansv:GOk%409846@cluster0.gzlmt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+    const dbname='codesnippets'
+
+    mongoClient.connect(url,(err,data)=>{
+        if(err) return done(err)
+        state.db=data.db(dbname)
+        done() 
+    })
+}
+  
+
+module.exports.get=function(){
+    return state.db
+}
+                    </div>
                 </code>
                 </pre>
             </div>
@@ -89,7 +126,7 @@ module.exports = connectDB;
         <div class="md:w-1/2 px-12 text-lg flex flex-col">
             <div class="flex flex-col ">
 
-                <cente class="my-2"> Folders To Make </cente>
+                <cente class="my-2"> Files To Make </cente>
 
                 <code class="font-bold text-green-600 bg-grey-500 p-3 rounded-md shadow-md my-2">routes</code>
                 <div class="flex flex-col items-start p-5">
