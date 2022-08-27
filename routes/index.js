@@ -2,8 +2,7 @@ var express = require('express');
 var router = express.Router();
 var express = require('express');
 var router = express.Router();
-var ObjectId = require('mongodb').ObjectId
-var fs = require('fs')
+
 // POST REQUESTS
 
 router.get('/dev', function (req, res) {
@@ -49,23 +48,6 @@ router.post('/addcrud', function (req, res) {
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
-
-// router.post('/addpage', function (req, res) {
-//   console.log(req.body);
-//   let routes = req.body.posts
-//   routes = routes.split(" ");
-//   let posts = [];
-//   routes.forEach(element => {
-//     posts.push({ data: '/' + element, method: 'post', response: 'render' })
-//   });
-//   let putss = req.body.puts
-//   putss = putss.split(" ");
-//   let puts = [];
-//   routes.forEach(element => {
-//     puts.push({ data: '/' + element, method: 'puts', response: 'redirect' })
-//   });
-//   res.render('pagegen', { posts, puts });
-// });
 
 
 module.exports = router;

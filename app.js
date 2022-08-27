@@ -11,11 +11,6 @@ var usersRouter = require('./routes/users');
 var app = express();
 
 
-
-
-
-
-
 // databse
 connectDB();
 

@@ -56,11 +56,34 @@
             <div class="flex flex-col ">
                 <code class="font-bold text-green-600 bg-grey-500 p-3 rounded-md shadow-md my-2">{{app}} </code>
                 <cente class="my-2"> </cente>
-                <code class="bg-grey-500 p-3 rounded-md shadow-md my-2">npm install -g express-generator</code>
-                <code class="bg-grey-500 p-3 rounded-md shadow-md my-2">express --view=hbs {{app}}</code>
+                <code class="bg-grey-500 p-3 rounded-md shadow-md my-2">npx express-generator --view=hbs {{app}}</code>
                 <code class="bg-grey-500 p-3 rounded-md shadow-md my-2">cd {{app}}</code>
                 <code class="bg-grey-500 p-3 rounded-md shadow-md my-2">npm i</code>
                 <code class="bg-grey-500 p-3 rounded-md shadow-md my-2">npm start</code>
+
+                <pre>
+                <code id="mongodb" class="shadow-sm bg-grey-100 text-xs rounded-xl ">
+                     <div class="flex items-center justify-between px-12">
+                        <center class="font-bold text-xl">connection.js</center>
+                            <button class=" text-lg text-green-500 font-bold" onClick=CopyToClipboard('mongodb') >copy</button>
+                          
+                    </div>
+const mongoose = require("mongoose");
+
+const connectDB = async () => {
+  try {
+    await mongoose.connect(
+      "mongodb+srv://userame:password@cluster0.xxxxx.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    );
+    console.log('Database is Connected...');
+  } catch (err) {
+    console.error(err.message);
+    process.exit(1);
+  }
+};
+module.exports = connectDB;
+                </code>
+                </pre>
             </div>
         </div>
         <div class="md:w-1/2 px-12 text-lg flex flex-col">
@@ -68,7 +91,7 @@
 
                 <cente class="my-2"> Folders To Make </cente>
 
-                <code class="font-bold text-green-600 bg-grey-500 p-3 rounded-md shadow-md my-2">Routes</code>
+                <code class="font-bold text-green-600 bg-grey-500 p-3 rounded-md shadow-md my-2">routes</code>
                 <div class="flex flex-col items-start p-5">
                     {{#each data}}
                     <p>{{this.name}}-routes.js</p>
@@ -76,7 +99,7 @@
                 </div>
 
 
-                <code class="font-bold text-green-600 bg-grey-500 p-3 rounded-md shadow-md my-2">Controllers</code>
+                <code class="font-bold text-green-600 bg-grey-500 p-3 rounded-md shadow-md my-2">controllers</code>
                 <div class="flex flex-col items-start p-5">
                     {{#each data}}
                     <p>{{this.name}}-controller.js</p>
@@ -85,10 +108,24 @@
                 </div>
 
 
-                <code class="font-bold text-green-600 bg-grey-500 p-3 rounded-md shadow-md my-2">Controllers</code>
+                <code class="font-bold text-green-600 bg-grey-500 p-3 rounded-md shadow-md my-2">views/pages</code>
                 <div class="flex flex-col items-start p-5">
                     {{#each data}}
-                    <p>forms/{{this.name}}.hbs</p>
+                    <div class="my-2">
+                        <p>all{{this.name}}s.hbs</p>
+                        <p>{{this.name}}.hbs</p>
+                    </div>
+                    {{/each}}
+                </div>
+
+
+                <code class="font-bold text-green-600 bg-grey-500 p-3 rounded-md shadow-md my-2">views/forms</code>
+                <div class="flex flex-col items-start p-5">
+                    {{#each data}}
+                    <div class="my-2">
+                        <p>add{{this.name}}.hbs</p>
+                        <p>edit{{this.name}}.hbs</p>
+                    </div>
                     {{/each}}
                 </div>
 
@@ -96,6 +133,52 @@
         </div>
     </div>
 </center>
+
+
+
+<div class=" my-12 px-4">
+    <div class="flex flex-wrap ">
+        {{#each data}}
+        <div class="min-w-min md:w-1/2 lg:my-4 lg:px-4">
+            <div class="">
+                <pre><code class="shadow-sm bg-grey-100 text-xs rounded-xl">
+    <div class="flex items-center justify-between px-12">
+                        <center class="font-bold text-xl">{{this.name}}-routes.js</center>
+                        {{!-- <center class=" text-lg text-green-500 font-bold"> --}}
+                            <button class=" text-lg text-green-500 font-bold" onClick=CopyToClipboard('{{this.name}}routes') >copy</button>
+                          
+                    </div>
+<div id="{{this.name}}routes">
+        const express = require("express");
+        const router = express.Router();
+        const {{this.name}}sController = require("../controllers/{{this.name}}s-controller");
+
+        router.get("/", {{this.name}}sController.getAll{{this.capname}}s);
+        router.get('/add', {{this.name}}sController.getAddform);
+        router.post("/add", {{this.name}}sController.add{{this.capname}});
+        router.get('/:id', {{this.name}}sController.getById);
+        router.get('/edit/:id', {{this.name}}sController.getEditform);
+        router.post("/edit", {{this.name}}sController.edit{{this.capname}});
+        router.delete("/:id", {{this.name}}sController.delete{{this.capname}});
+
+        router.put("/:id", {{this.name}}sController.update{{this.capname}});
+
+        module.exports = router;
+</div>
+                </code></pre>
+            </div>
+
+        </div>
+        {{/each}}
+        <!-- END Column -->
+
+    </div>
+
+</div>
+
+
+
+
 
 
 <div class=" my-12 px-4">
@@ -166,46 +249,4 @@
         <!-- END Column -->
 
     </div>
-</div>
-
-
-
-<div class=" my-12 px-4">
-    <div class="flex flex-wrap ">
-        {{#each data}}
-        <div class="min-w-min md:w-1/2 lg:my-4 lg:px-4">
-            <div class="">
-                <pre><code class="shadow-sm bg-grey-100 text-xs rounded-xl">
-    <div class="flex items-center justify-between px-12">
-                        <center class="font-bold text-xl">{{this.name}}-routes.js</center>
-                        {{!-- <center class=" text-lg text-green-500 font-bold"> --}}
-                            <button class=" text-lg text-green-500 font-bold" onClick=CopyToClipboard('{{this.name}}routes') >copy</button>
-                          
-                    </div>
-<div id="{{this.name}}routes">
-        const express = require("express");
-        const router = express.Router();
-        const {{this.name}}sController = require("../controllers/{{this.name}}s-controller");
-
-        router.get("/", {{this.name}}Controller.getAll{{this.capname}}s);
-        router.get('/add', {{this.name}}Controller.getAddform);
-        router.post("/add", {{this.name}}Controller.add{{this.capname}});
-        router.get('/:id', {{this.name}}Controller.getById);
-        router.get('/edit/:id', {{this.name}}Controller.getEditform);
-        router.post("/edit", {{this.name}}Controller.edit{{this.capname}});
-        router.delete("/:id", {{this.name}}Controller.delete{{this.capname}});
-
-        router.put("/:id", {{this.name}}Controller.update{{this.capname}});
-
-        module.exports = router;
-</div>
-                </code></pre>
-            </div>
-
-        </div>
-        {{/each}}
-        <!-- END Column -->
-
-    </div>
-
 </div>
