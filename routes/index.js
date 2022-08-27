@@ -21,7 +21,6 @@ router.get('/crudgen', function (req, res) {
   let data = 'test'
   res.render('crudgen', { data });
 });
-
 router.post('/addpage', function (req, res) {
   console.log(req.body.name);
   let route = req.body.name
