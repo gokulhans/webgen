@@ -2,32 +2,29 @@ var express = require('express');
 var router = express.Router();
 var express = require('express');
 var router = express.Router();
-
 var fs = require('fs');
 
-
 // POST REQUESTS
-
 
 router.get('/dev', function (req, res) {
   res.send('wELCOME cOWBOYS');
 });
+
 router.get('/', function (req, res) {
   let data = 'test'
   res.render('index', { router });
 });
+
 router.get('/pagegen', function (req, res) {
   let data = 'test'
   res.render('pagegen', { data });
 });
-router.get('/staticgen', function (req, res) {
-  let data = 'test'
-  res.render('staticgen', { data });
-});
+
 router.get('/formgen', function (req, res) {
   let data = 'test'
   res.render('formgen', { data });
 });
+
 router.get('/crudgen', function (req, res) {
   let data = 'test'
   res.render('crudgen', { data });
@@ -42,7 +39,6 @@ router.post('/addform', function (req, res) {
   route.forEach(name => {
     data.push({ name: name })
   });
-
 
   data.forEach(data => {
     let string =
@@ -71,7 +67,6 @@ router.post('/addform', function (req, res) {
 
 
 router.post('/addpage', function (req, res) {
-  console.log(req.body.name);
   let route = req.body.name
   route = route.split(" ");
   let data = [];
@@ -86,6 +81,20 @@ router.post('/addpage', function (req, res) {
     let filename = `myapp/views/pages/${data.name}.hbs`
 
     fs.writeFile(filename, string, function (err) {
+      if (err) throw err;
+      console.log('Saved!');
+    });
+
+  });
+
+
+  data.forEach(data => {
+    let string = `router.get('/${data.name}', function (req, res) {
+      res.render('pages/${data.name}');
+    });\n \n`
+    let filename = `myapp/routes/index.js`
+
+    fs.appendFile(filename, string, function (err) {
       if (err) throw err;
       console.log('Saved!');
     });
@@ -121,6 +130,7 @@ router.post('/addstaticgen', function (req, res) {
 
   res.render('staticgen', { data });
 });
+
 
 router.post('/addcrud', function (req, res) {
   console.log(req.body.name);
@@ -163,7 +173,7 @@ router.post('/addcrud', function (req, res) {
     });
 
   });
- 
+
 
   data.forEach(data => {
     let string = ` 
@@ -229,17 +239,83 @@ router.post('/addcrud', function (req, res) {
 
   });
 
+
+  data.forEach(data => {
+    let string1 =
+      `
+<form class="flex flex-col max-w-md shadow-lg bg-grey-300 p-5 rounded-xl" action="/add${data.name}" method="post">
+<center class="m-5 font-bold text-lg"> Forms </center>
+    <div class="flex flex-col ">
+        <input class="p-2 my-1 border" type="text" name="name" value="" placeholder="Route name...">
+    </div>
+    <div><button class="my-2 p-2 font-bold text-md border bg-green text-green-600 " type="submit">Submit</button></div>
+
+</form>
+    `
+    let string2 =
+      `
+<form class="flex flex-col max-w-md shadow-lg bg-grey-300 p-5 rounded-xl" action="/edit${data.name}" method="put">
+<center class="m-5 font-bold text-lg"> Forms </center>
+    <div class="flex flex-col ">
+        <input class="p-2 my-1 border" type="text" name="name" value="" placeholder="Route name...">
+    </div>
+    <div><button class="my-2 p-2 font-bold text-md border bg-green text-green-600 " type="submit">Submit</button></div>
+
+</form>
+    `
+    let string3 =
+      `
+      {{#each data}}
+  
+      <div class="flex flex-col ">
+      {{this.name}}
+      </div>
+     
+      {{/each}}
+    `
+    let string4 =
+      `
+    <div class="flex flex-col ">
+       {{data.name}}
+    </div>
+
+    `
+
+    let filename1 = `myapp/views/forms/add${data.name}.hbs`
+    let filename2 = `myapp/views/forms/edit${data.name}.hbs`
+    let filename3 = `myapp/views/pages/all${data.name}s.hbs`
+    let filename4 = `myapp/views/pages/${data.name}.hbs`
+
+    fs.writeFile(filename1, string1, function (err) {
+      if (err) throw err;
+      console.log('Saved!');
+    });
+
+    fs.writeFile(filename2, string2, function (err) {
+      if (err) throw err;
+      console.log('Saved!');
+    });
+
+    fs.writeFile(filename3, string3, function (err) {
+      if (err) throw err;
+      console.log('Saved!');
+    });
+
+    fs.writeFile(filename4, string4, function (err) {
+      if (err) throw err;
+      console.log('Saved!');
+    });
+
+  });
+
   res.render('crudgen', { data, app });
 }),
 
   router.get('/generate', async function (req, res) {
     var zipper = require('zip-local');
     zipper.sync.zip("./myapp").save("public/myapp.zip");
-    res.redirect("/");
+    res.redirect("/crudgen");
   });
-
-module.exports = router;
-
 
 router.get('/cleandir', (req, res) => {
   const fsExtra = require('fs-extra');
@@ -248,5 +324,9 @@ router.get('/cleandir', (req, res) => {
   fsExtra.emptyDirSync("./myapp/views/forms/");
   fsExtra.emptyDirSync("./myapp/views/pages/");
   console.log('done');
-  res.redirect("back");
+  res.redirect("/crudgen");
 });
+
+module.exports = router;
+
+

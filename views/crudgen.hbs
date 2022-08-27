@@ -225,7 +225,7 @@ app.use('/{{this.name}}s', {{this.name}}Router);
         router.get('/add', {{this.name}}sController.get{{this.capname}}Addform);
         router.post("/add", {{this.name}}sController.add{{this.capname}});
         router.get('/edit/:id', {{this.name}}sController.get{{this.capname}}Editform);
-        router.post("/edit", {{this.name}}sController.edit{{this.capname}});
+        router.put("/edit", {{this.name}}sController.edit{{this.capname}});
         router.get('/:id', {{this.name}}sController.get{{this.capname}}ById);
         router.delete("/:id", {{this.name}}sController.delete{{this.capname}});
 
