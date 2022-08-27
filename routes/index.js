@@ -163,7 +163,7 @@ router.post('/addcrud', function (req, res) {
     });
 
   });
-
+ 
 
   data.forEach(data => {
     let string = ` 
