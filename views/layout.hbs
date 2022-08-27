@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{{title}}</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+  {{!-- For Syntax Highlighting --}}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+
+    <script>hljs.initHighlightingOnLoad();</script>
+
+<body>
+  <div class="fixed top-0 left-0 h-24 bg-white z-100 w-screen pb-3 pt-2 ml-3">
+    <h1 class="font-bold text-lg pb-3">NODE JS GENERATOR </h1>
+    <a class=" border px-3 py-1 mx-3 bg-green-300 text-black shadow-md rounded-md" href="/pagegen">Pages</a>
+    <a class="border px-3 py-1 mx-3 bg-green-300 text-black shadow-md rounded-md" href="/crudgen">CRUD</a>
+  </div>
+  <div class="pt-24">
+  {{{body}}}
+  </div>
+</body>
+
+</html>

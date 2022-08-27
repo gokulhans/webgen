@@ -1,0 +1,202 @@
+<div id="alert-2" class="fixed bottom-10 flex px-24 p-4 bg-green-100 rounded-lg dark:bg-red-200 h-12" role="alert">
+    <span class="sr-only">Info</span>
+    <div class="ml-3 text-sm font-medium text-green-700 dark:text-red-800">
+        Copied to clipboard
+    </div>
+</div>
+
+<style>
+    #alert-2 {
+        display: none;
+        z-index: 999;
+    }
+</style>
+
+<script>
+    function show() {
+        document.getElementById('alert-2').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('alert-2').style.display = 'none';
+        }, 5000);
+    }
+</script>
+
+{{!--
+<script>
+    function CopyToCliphboard(id) {
+        var r = document.createRange();
+        r.selectNode(document.getElementById(id));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(r);
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        show()
+    }
+</script> --}}
+
+
+<center class="mx-5">
+
+    <form class="flex flex-col max-w-md shadow-lg bg-grey-300 p-5 rounded-xl" action="/addcrud" method="post">
+        <center class="m-5 font-bold text-lg"> Functions Generater </center>
+        <div class="flex flex-col ">
+            <input class="p-2 my-1 border" type="text" name="app" value="" placeholder="app name...">
+        </div>
+        <div class="flex flex-col ">
+            <input class="p-2 my-1 border" type="text" name="name" value="" placeholder="Route name...">
+        </div>
+        <div><button class="my-2 p-2 font-bold text-md border bg-green text-green-600 " type="submit">Submit</button>
+        </div>
+    </form>
+
+</center>
+
+<center class="my-8">
+    <div class="flex flex-wrap">
+        <div class="md:w-1/2 px-12 text-lg flex flex-col">
+            <div class="flex flex-col ">
+                <code class="font-bold text-green-600 bg-grey-500 p-3 rounded-md shadow-md my-2">{{app}} </code>
+                <cente class="my-2"> </cente>
+                <code class="bg-grey-500 p-3 rounded-md shadow-md my-2">express --view=hbs {{app}}</code>
+                <code class="bg-grey-500 p-3 rounded-md shadow-md my-2">cd {{app}}</code>
+                <code class="bg-grey-500 p-3 rounded-md shadow-md my-2">npm i</code>
+                <code class="bg-grey-500 p-3 rounded-md shadow-md my-2">npm start</code>
+            </div>
+        </div>
+        <div class="md:w-1/2 px-12 text-lg flex flex-col">
+            <div class="flex flex-col ">
+                <cente class="my-2"> Folders To Make </cente>
+                <code class="font-bold text-green-600 bg-grey-500 p-3 rounded-md shadow-md my-2">Routes</code>
+                <div class="flex flex-col items-start p-5">
+                        {{#each data}}
+
+                <p>{{this.name}}-routes.js</p>
+                        {{/each}}
+               
+                </div>
+                <code class="font-bold text-green-600 bg-grey-500 p-3 rounded-md shadow-md my-2">Controllers</code>
+                <div class="flex flex-col items-start p-5">
+                        {{#each data}}
+                <p>{{this.name}}-controller.js</p>
+             
+                        {{/each}}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</center>
+
+
+<div class=" my-12 px-4">
+    <div class="flex flex-wrap ">
+        {{#each data}}
+        <div class="min-w-min md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
+            <div class="">
+                <pre><code class="shadow-sm bg-grey-100 text-xs rounded-xl">
+                    <div class="flex items-center justify-between px-12">
+                        <center class="font-bold text-xl">{{this.name}}s-controller.js</center>
+                        <center class=" text-lg text-green-500 font-bold"><button onclick={CopyToClipboard("{{this.name}}")} >copy</button></center>
+                    </div>
+
+        const getAll{{this.capname}}s = async function (req, res) {
+        let data = await db.get().collection('data').find().toArray()
+        res.render('all{{this.name}}s',{data});
+        }
+
+        const getAddform = async function (req, res) {
+        res.render('forms/add{{this.name}}');
+        }
+
+        const add{{this.capname}} = async function (req, res) {
+        let data = req.body
+        await db.get().collection('data').insertOne(data)
+        res.render('pages/{{this.name}}', { data })
+        }
+
+        const getEditform = async function (req, res) {
+        let id = req.params.id
+        let data = await db.get().collection('data').findOne({ _id: ObjectId(id) })
+        res.render('forms/edit{{this.name}}', { data });
+        }
+
+        const edit{{this.capname}} = async function (req, res) {
+        let newdata = req.body
+        let query = { _id: ObjectId(req.body.id) }
+        var newvalues = { $set: { name: newdata.name, desc: newdata.desc} };
+        await db.get().collection('data').updateOne(query, newvalues)
+        res.redirect(`/{{this.name}}/${req.body.id}`)
+        }
+
+        const delete{{this.capname}} = async function (req, res) {
+        let id = req.params.id
+        await db.get().collection('data').deleteOne({ _id: ObjectId(id) })
+        res.redirect('back')
+        }
+
+        const getById = async function (req, res) {
+        let id = req.params.id
+        let data = await db.get().collection('data').findOne({ _id: ObjectId(id) })
+        res.render('pages/{{this.name}}', { data });
+        }
+
+                </code></pre>
+            </div>
+
+        </div>
+
+        <script>
+            function CopyToClipboard(id) {
+                console.log(id)
+                var r = document.createRange();
+                r.selectNode(document.getElementById(id));
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(r);
+                document.execCommand('copy');
+                window.getSelection().removeAllRanges();
+                show()
+            }
+        </script>
+
+
+        {{/each}}
+        <!-- END Column -->
+
+    </div>
+</div>
+
+
+
+<div class=" my-12 px-4">
+    <div class="flex flex-wrap ">
+        {{#each data}}
+        <div class="min-w-min md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3">
+            <div class="">
+                <pre><code class="shadow-sm bg-grey-100 text-xs rounded-xl">
+        <center class="font-bold text-xl"> {{this.name}}-routes.js</center>
+
+        const express = require("express");
+        const router = express.Router();
+        const {{this.name}}sController = require("../controllers/{{this.name}}s-controller");
+
+        router.get("/", {{this.name}}Controller.getAll{{this.capname}}s);
+        router.get('/add', {{this.name}}Controller.getAddform);
+        router.post("/add", {{this.name}}Controller.add{{this.capname}});
+        router.get('/:id', {{this.name}}Controller.getById);
+        router.get('/edit/:id', {{this.name}}Controller.getEditform);
+        router.post("/edit", {{this.name}}Controller.edit{{this.capname}});
+        router.delete("/:id", {{this.name}}Controller.delete{{this.capname}});
+
+        router.put("/:id", {{this.name}}Controller.update{{this.capname}});
+
+        module.exports = router;
+
+                </code></pre>
+            </div>
+
+        </div>
+        {{/each}}
+        <!-- END Column -->
+
+    </div>
+</div>
