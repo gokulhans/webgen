@@ -1,28 +1,31 @@
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config()
-}
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-const sessions = require('express-session');
-var db = require('./connection');
-const hbs = require('express-handlebars');
 
-db.connect((err) => {
-  if (err) console.log("Connection Error" + err);
-  else console.log("Database connected to port")
-})
+  if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+  }
+  var createError = require('http-errors');
+  var express = require('express');
+  var path = require('path');
+  var cookieParser = require('cookie-parser');
+  var logger = require('morgan');
+  const sessions = require('express-session');
+  var db = require('./connection');
+  const hbs = require('express-handlebars');
+  var app = express();
+  
+  db.connect((err) => {
+    if (err) console.log("Connection Error" + err);
+    else console.log("Database connected to port")
+  })
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
-var app = express();
+  var indexRouter = require('./routes/index');
+
+   var userRouter = require('./routes/user-routes');
+  
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'hbs');
 app.engine('hbs', hbs.engine({ extname: 'hbs', defaultLayout: 'layout', layoutsDir: __dirname + '/views/', partialsDir: __dirname + '/views/partials/' }))
 
 app.use(logger('dev'));
@@ -44,8 +47,9 @@ app.use(sessions({
 }));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
+  app.use('/users', userRouter);
+  
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
@@ -63,3 +67,5 @@ app.use(function (err, req, res, next) {
 });
 
 module.exports = app;
+
+  

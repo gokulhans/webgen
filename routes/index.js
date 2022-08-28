@@ -66,8 +66,7 @@ router.post('/addform', function (req, res) {
   res.render('formgen', { data });
 });
 
-
-router.post('/addpage', function (req, res) {
+router.post('/addpage', async function (req, res) {
   let route = req.body.name
   route = route.split(" ");
   let data = [];
@@ -88,18 +87,23 @@ router.post('/addpage', function (req, res) {
   });
 
 
+
+  // await new Promise(resolve => setTimeout(resolve, 5000));
   data.forEach(data => {
-    let string = `router.get('/${data.name}', function (req, res) {
+
+
+    let string1 = `router.get('/${data.name}', function (req, res) {
       res.render('pages/${data.name}');
     });\n \n`
-    let filename = `myapp/routes/index.js`
+    let filename1 = `myapp/routes/index.js`
 
-    fs.appendFile(filename, string, function (err) {
+    fs.appendFile(filename1, string1, function (err) {
       if (err) throw err;
       console.log('Saved!');
     });
 
   });
+
 
   res.render('pagegen', { data });
 });
@@ -133,7 +137,7 @@ router.post('/addstaticgen', function (req, res) {
 
 
 
-router.post('/addcrud', function (req, res) {
+router.post('/addcrud', async function (req, res) {
   console.log(req.body.name);
   let app = req.body.app
   let route = req.body.name
@@ -161,7 +165,7 @@ router.post('/addcrud', function (req, res) {
     router.get('/edit/:id',${data.name}sController.get${data.capname}Editform);
     router.post("/edit", ${data.name}sController.edit${data.capname});
     router.get('/:id', ${data.name}sController.get${data.capname}ById);
-    router.delete("/delete/:id", ${data.name}sController.delete${data.capname});
+    router.get("/delete/:id", ${data.name}sController.delete${data.capname});
 
     module.exports = router;`;
 
@@ -207,7 +211,7 @@ router.post('/addcrud', function (req, res) {
         let query = { _id: ObjectId(req.body.id) }
         var newvalues = { $set: { name: newdata.name,} };
         await db.get().collection('${data.name}s').updateOne(query, newvalues)
-        res.redirect(\`/${data.name}/\${req.body.id}\`)
+        res.redirect(\`/${data.name}s/\${req.body.id}\`)
         }
 
         const delete${data.capname} = async function (req, res) {
@@ -255,14 +259,17 @@ router.post('/addcrud', function (req, res) {
     `
     let string2 =
       `
-<form class="flex flex-col max-w-md shadow-lg bg-grey-300 p-5 rounded-xl" action="/${data.name}s/edit" method="post">
-<center class="m-5 font-bold text-lg"> Forms </center>
-    <div class="flex flex-col ">
-        <input class="p-2 my-1 border" type="text" name="name" value="" placeholder="Route name...">
-    </div>
-    <div><button class="my-2 p-2 font-bold text-md border bg-green text-green-600 " type="submit">Submit</button></div>
 
-</form>
+      <form class="flex flex-col max-w-md shadow-lg bg-grey-300 p-5 rounded-xl" action="/users/edit" method="post">
+      <center class="m-5 font-bold text-lg"> Forms </center>
+          <div class="flex flex-col ">
+              <input class="p-2 my-1 border" type="text" name="name" value="{{data.name}}" placeholder="Route name...">
+              <input class="p-2 my-1 border" type="text" name="id" hidden value="{{data._id}}" placeholder="Route name...">
+          </div>
+          <div><button class="my-2 p-2 font-bold text-md border bg-green text-green-600 " type="submit">Submit</button></div>
+      
+      </form>
+          
     `
     let string3 =
       `
@@ -310,6 +317,140 @@ router.post('/addcrud', function (req, res) {
       console.log('Saved!');
     });
 
+  });
+
+  let string1 = `
+  var express = require('express');
+var router = express.Router();
+
+/* GET home page. */
+router.get('/', function(req, res, next) {
+res.render('index', { title: 'Express' });
+});
+\n\n
+module.exports = router;
+
+  \n \n`
+
+  let filename1 = `myapp/routes/index.js`
+
+  fs.appendFile(filename1, string1, function (err) {
+    if (err) throw err;
+    console.log('Saved! gg');
+  });
+  let appname = `myapp/app.js`
+
+  let app1 = `
+  if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+  }
+  var createError = require('http-errors');
+  var express = require('express');
+  var path = require('path');
+  var cookieParser = require('cookie-parser');
+  var logger = require('morgan');
+  const sessions = require('express-session');
+  var db = require('./connection');
+  const hbs = require('express-handlebars');
+  var app = express();
+  
+  db.connect((err) => {
+    if (err) console.log("Connection Error" + err);
+    else console.log("Database connected to port")
+  })
+
+
+  var indexRouter = require('./routes/index');
+
+  `
+  let app2 = `
+  
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+app.engine('hbs', hbs.engine({ extname: 'hbs', defaultLayout: 'layout', layoutsDir: __dirname + '/views/', partialsDir: __dirname + '/views/partials/' }))
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+
+// creating 24 hours from milliseconds
+const oneDay = 1000 * 60 * 60 * 24;
+
+//session middleware
+app.use(sessions({
+  secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+  saveUninitialized: true,
+  cookie: { maxAge: oneDay },
+  resave: false
+}));
+
+app.use('/', indexRouter);
+
+  `
+  let app3 = `
+  
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function (err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+module.exports = app;
+
+  `
+
+  fs.writeFile(appname, app1, function (err) {
+    if (err) throw err;
+    console.log('Saved! gg');
+  });
+  await new Promise(resolve => setTimeout(resolve, 3000));
+  data.forEach(data => {
+
+    let string = ` var ${data.name}Router = require('./routes/${data.name}-routes');`
+
+    fs.appendFile(appname, string, function (err) {
+      if (err) throw err;
+      console.log('Saved! gg');
+    });
+
+  });
+  await new Promise(resolve => setTimeout(resolve, 3000));
+  fs.appendFile(appname, app2, function (err) {
+    if (err) throw err;
+    console.log('Saved! gg');
+  });
+  await new Promise(resolve => setTimeout(resolve, 3000));
+
+  data.forEach(data => {
+
+    let string = `app.use('/${data.name}s', ${data.name}Router);`
+
+    fs.appendFile(appname, string, function (err) {
+      if (err) throw err;
+      console.log('Saved! gg');
+    });
+
+  });
+  await new Promise(resolve => setTimeout(resolve, 3000));
+
+  fs.appendFile(appname, app3, function (err) {
+    if (err) throw err;
+    console.log('Saved! gg');
   });
 
   res.render('crudgen', { data, app });
