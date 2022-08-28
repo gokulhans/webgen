@@ -40,6 +40,7 @@ router.post('/addform', function (req, res) {
     data.push({ name: name })
   });
 
+
   data.forEach(data => {
     let string =
       `
@@ -74,7 +75,6 @@ router.post('/addpage', function (req, res) {
     data.push({ name: name })
   });
   console.log(data);
-
 
   data.forEach(data => {
     let string = `<h1> ${data.name}</h1>`
@@ -132,6 +132,7 @@ router.post('/addstaticgen', function (req, res) {
 });
 
 
+
 router.post('/addcrud', function (req, res) {
   console.log(req.body.name);
   let app = req.body.app
@@ -160,7 +161,7 @@ router.post('/addcrud', function (req, res) {
     router.get('/edit/:id',${data.name}sController.get${data.capname}Editform);
     router.post("/edit", ${data.name}sController.edit${data.capname});
     router.get('/:id', ${data.name}sController.get${data.capname}ById);
-    router.delete("/:id", ${data.name}sController.delete${data.capname});
+    router.delete("/delete/:id", ${data.name}sController.delete${data.capname});
 
     module.exports = router;`;
 
@@ -181,8 +182,8 @@ router.post('/addcrud', function (req, res) {
         const db = require('../connection');
 
         const getAll${data.capname}s = async function (req, res) {
-        let data = await db.get().collection('data').find().toArray()
-        res.render('all${data.name}s',{data});
+        let data = await db.get().collection('${data.name}s').find().toArray()
+        res.render('pages/all${data.name}s',{data});
         }
 
         const get${data.capname}Addform = async function (req, res) {
@@ -191,33 +192,33 @@ router.post('/addcrud', function (req, res) {
 
         const add${data.capname} = async function (req, res) {
         let data = req.body
-        await db.get().collection('data').insertOne(data)
+        await db.get().collection('${data.name}s').insertOne(data)
         res.render('pages/${data.name}', { data })
         }
 
         const get${data.capname}Editform = async function (req, res) {
         let id = req.params.id
-        let data = await db.get().collection('data').findOne({ _id: ObjectId(id) })
+        let data = await db.get().collection('${data.name}s').findOne({ _id: ObjectId(id) })
         res.render('forms/edit${data.name}', { data });
         }
 
         const edit${data.capname} = async function (req, res) {
         let newdata = req.body
         let query = { _id: ObjectId(req.body.id) }
-        var newvalues = { $set: { name: newdata.name, desc: newdata.desc} };
-        await db.get().collection('data').updateOne(query, newvalues)
+        var newvalues = { $set: { name: newdata.name,} };
+        await db.get().collection('${data.name}s').updateOne(query, newvalues)
         res.redirect(\`/${data.name}/\${req.body.id}\`)
         }
 
         const delete${data.capname} = async function (req, res) {
         let id = req.params.id
-        await db.get().collection('data').deleteOne({ _id: ObjectId(id) })
+        await db.get().collection('${data.name}s').deleteOne({ _id: ObjectId(id) })
         res.redirect('back')
         }
 
         const get${data.capname}ById = async function (req, res) {
         let id = req.params.id
-        let data = await db.get().collection('data').findOne({ _id: ObjectId(id) })
+        let data = await db.get().collection('${data.name}s').findOne({ _id: ObjectId(id) })
         res.render('pages/${data.name}', { data });
         }
 
@@ -230,7 +231,7 @@ router.post('/addcrud', function (req, res) {
         exports.get${data.capname}ById = get${data.capname}ById;
     `;
 
-    let filename = `myapp/controllers/${data.name}-controller.js`
+    let filename = `myapp/controllers/${data.name}s-controller.js`
 
     fs.writeFile(filename, string, function (err) {
       if (err) throw err;
@@ -243,7 +244,7 @@ router.post('/addcrud', function (req, res) {
   data.forEach(data => {
     let string1 =
       `
-<form class="flex flex-col max-w-md shadow-lg bg-grey-300 p-5 rounded-xl" action="/add${data.name}" method="post">
+<form class="flex flex-col max-w-md shadow-lg bg-grey-300 p-5 rounded-xl" action="/${data.name}s/add" method="post">
 <center class="m-5 font-bold text-lg"> Forms </center>
     <div class="flex flex-col ">
         <input class="p-2 my-1 border" type="text" name="name" value="" placeholder="Route name...">
@@ -254,7 +255,7 @@ router.post('/addcrud', function (req, res) {
     `
     let string2 =
       `
-<form class="flex flex-col max-w-md shadow-lg bg-grey-300 p-5 rounded-xl" action="/edit${data.name}" method="put">
+<form class="flex flex-col max-w-md shadow-lg bg-grey-300 p-5 rounded-xl" action="/${data.name}s/edit" method="post">
 <center class="m-5 font-bold text-lg"> Forms </center>
     <div class="flex flex-col ">
         <input class="p-2 my-1 border" type="text" name="name" value="" placeholder="Route name...">
@@ -266,11 +267,14 @@ router.post('/addcrud', function (req, res) {
     let string3 =
       `
       {{#each data}}
-  
-      <div class="flex flex-col ">
-      {{this.name}}
-      </div>
-     
+          <div class="m-3 p-3 shadow-md w-96 rounded-md bg-grey-500 text-black flex items-center">
+                {{this.name}}
+                <div class="flex w-full justify-end">
+                      <a href="/${data.name}s/{{this._id}}" class="m-2 flex flex-col text-blue-500">Open</a>
+                      <a href="/${data.name}s/edit/{{this._id}}" class="m-2 flex flex-col text-blue-500">Edit</a>
+                      <a href="/${data.name}s/delete/{{this._id}}" class="m-2 flex flex-col text-blue-500">Delete</a>
+                </div>
+          </div>
       {{/each}}
     `
     let string4 =
