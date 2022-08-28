@@ -1,2 +1,52 @@
 <h1>{{title}}</h1>
 <p>Welcome to {{title}}</p>
+<p>Welcome to WebGen</p>
+
+<div id="alert-2" class="fixed top-20 flex px-24 p-4 bg-green-100 rounded-lg dark:bg-red-200 h-12" role="alert">
+    <span class="sr-only">Info</span>
+    <div class="ml-3 text-sm font-medium text-green-700 dark:text-red-800">
+        Copied to clipboard
+    </div>
+</div>
+
+<style>
+    #alert-2 {
+        display: none;
+        z-index: 999;
+        margin-left: 35%;
+    }
+</style>
+
+
+First Steps 
+<code onClick=CopyToClipboard('npmall')
+    class="cursor-grab font-bold text-green-600 bg-grey-500 p-3 rounded-md shadow-md my-2">{{app}} </code>
+
+<div id="npmall" class="flex flex-col">
+
+    <code onClick=CopyToClipboard('npm4') id="npm4"
+        class="cursor-grab bg-grey-500 p-3 rounded-md shadow-md my-2">npm start</code>
+    <code onClick=CopyToClipboard('npm5') id="npm5"
+        class="cursor-grab bg-grey-500 p-3 rounded-md shadow-md my-2">npm update --save</code>
+
+</div>
+
+<script>
+       function show() {
+        document.getElementById('alert-2').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('alert-2').style.display = 'none';
+        }, 5000);
+    }
+
+   function CopyToClipboard(id) {
+        console.log('d')
+        var r = document.createRange();
+        r.selectNode(document.getElementById(id));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(r);
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        show()
+    }
+</script>

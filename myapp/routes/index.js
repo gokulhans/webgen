@@ -13,11 +13,3 @@ module.exports = router;
 
   
  
-router.get('/halo', function (req, res) {
-      res.render('pages/halo');
-    });
- 
-router.get('/home', function (req, res) {
-      res.render('pages/home');
-    });
- 

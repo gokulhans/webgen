@@ -9,6 +9,6 @@
     router.get('/edit/:id',usersController.getUserEditform);
     router.post("/edit", usersController.editUser);
     router.get('/:id', usersController.getUserById);
-    router.delete("/delete/:id", usersController.deleteUser);
+    router.get("/delete/:id", usersController.deleteUser);
 
     module.exports = router;

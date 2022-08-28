@@ -28,7 +28,7 @@
         let query = { _id: ObjectId(req.body.id) }
         var newvalues = { $set: { name: newdata.name,} };
         await db.get().collection('users').updateOne(query, newvalues)
-        res.redirect(`/user/${req.body.id}`)
+        res.redirect(`/users/${req.body.id}`)
         }
 
         const deleteUser = async function (req, res) {
