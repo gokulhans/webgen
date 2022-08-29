@@ -248,19 +248,39 @@ router.post('/addcrud', async function (req, res) {
   data.forEach(data => {
     let string1 =
       `
-<form class="flex flex-col max-w-md shadow-lg bg-grey-300 p-5 rounded-xl" action="/${data.name}s/add" method="post">
-<center class="m-5 font-bold text-lg"> Forms </center>
-    <div class="flex flex-col ">
-        <input class="p-2 my-1 border" type="text" name="name" value="" placeholder="Route name...">
+<a href="/users/" class="btn btn-primary m-3 text-white"><strong>Users Home</strong></a>
+ 
+<div class="center">
+    <div class="center-div">
+        <form class="width container mt-3" action="/${data.name}s/add" method="post">
+            <h3 class="mb-3">Add</h3>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Name</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" name="name" aria-describedby="emailHelp"
+                    placeholder="Name..">
+            </div>
+            {{!-- <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1">
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            </div> --}}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
     </div>
-    <div><button class="my-2 p-2 font-bold text-md border bg-green text-green-600 " type="submit">Submit</button></div>
-
-</form>
+</div>
     `
     let string2 =
       `
 
-      <form class="flex flex-col max-w-md shadow-lg bg-grey-300 p-5 rounded-xl" action="/users/edit" method="post">
+      <form class="flex flex-col max-w-md shadow-lg bg-grey-300 p-5 rounded-xl" action="/${data.name}s/edit" method="post">
       <center class="m-5 font-bold text-lg"> Forms </center>
           <div class="flex flex-col ">
               <input class="p-2 my-1 border" type="text" name="name" value="{{data.name}}" placeholder="Route name...">
@@ -270,25 +290,112 @@ router.post('/addcrud', async function (req, res) {
       
       </form>
           
+
+      <a href="/users/" class="btn btn-primary m-3 text-white"><strong>Users Home</strong></a>
+
+<div class="center">
+    <div class="center-div">
+        <form class="width container mt-3" action="/users/edit" method="post">
+        <center><h3 class="mb-3">Edit</h3></center>
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Name</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" name="name" value="{{data.name}}" aria-describedby="emailHelp"placeholder="Name..">
+                <input type="text" class="form-control" id="exampleInputEmail1" name="id" value="{{data._id}}" hidden aria-describedby="emailHelp"placeholder="Name..">
+            </div>
+            {{!-- <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1">
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            </div> --}}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
     `
     let string3 =
       `
-      {{#each data}}
-          <div class="m-3 p-3 shadow-md w-96 rounded-md bg-grey-500 text-black flex items-center">
-                {{this.name}}
-                <div class="flex w-full justify-end">
-                      <a href="/${data.name}s/{{this._id}}" class="m-2 flex flex-col text-blue-500">Open</a>
-                      <a href="/${data.name}s/edit/{{this._id}}" class="m-2 flex flex-col text-blue-500">Edit</a>
-                      <a href="/${data.name}s/delete/{{this._id}}" class="m-2 flex flex-col text-blue-500">Delete</a>
-                </div>
-          </div>
-      {{/each}}
+<a href="/users/add" class="btn btn-primary m-3 text-white"><strong>Add</strong></a>
+
+<div class="py-3">
+      <div class="container">
+            <div class="row hidden-md-up">
+                  {{#each data}}
+                  <div class="col-md-6 col-lg-4">
+                        <div class="p-3 mt-2 mb-2">
+
+                              <img class="card-img-top rounded-top" height="200px" style="object-fit: cover;"
+                                    src="https://source.unsplash.com/random/" alt="Card image cap">
+                              <div class="rounded shadow-lg p-3 bg-white rounded">
+                                    <div class="card-body mt-2">
+                                          <a href="/${data.name}s/{{this._id}}">
+                                                <h5 class="card-title">{{this.name}}</h5>
+                                          </a>
+
+                                          <p class="card-text mt-2">Some quick example text to build on the card title
+                                                and
+                                                make up the bulk of the card's content.</p>
+                                    </div>
+                                    <div class="mt-3">
+                                          <a href="/${data.name}s/{{this._id}}" class="btn btn-success text-white "> <b>Open</b></a>
+                                          <a href="/${data.name}s/edit/{{this._id}}" class="btn btn-primary text-white ml-2"> <b>Edit</b></a>
+                                          <a href="/${data.name}s/delete/{{this._id}}" class="btn btn-danger text-white ml-2"><b>Delete</b></a>
+                                    </div>
+                              </div>
+                        </div>
+
+                  </div>
+                  {{/each}}
+            </div>
+      </div>
+</div>
     `
     let string4 =
       `
-    <div class="flex flex-col ">
-       {{data.name}}
-    </div>
+      <a href="/users/" class="btn btn-primary m-3 text-white"><strong>Users Home</strong></a>
+
+
+      <div class="container mt-5 mb-5">
+     <div class="row d-flex justify-content-center">
+         <div class="col-md-10">
+             <div class="center-div">
+                 <div class="row">
+                     <div class="col-md-6">
+                         <div class="images p-3">
+                             <div class="text-center p-4"> <img id="main-image" src="https://i.imgur.com/Dhebu4F.jpg" width="250" /> </div>
+                             <div class="thumbnail text-center"> <img onclick="change_image(this)" src="https://i.imgur.com/Rx7uKd0.jpg" width="70"> <img onclick="change_image(this)" src="https://i.imgur.com/Dhebu4F.jpg" width="70"> </div>
+                         </div>
+                     </div>
+                     <div class="col-md-6">
+                         <div class="product p-4">
+                             <div class="d-flex justify-content-between align-items-center">
+                                 <div class="d-flex align-items-center"> <i class="fa fa-long-arrow-left"></i> <span class="ml-1">Back</span> </div> <i class="fa fa-shopping-cart text-muted"></i>
+                             </div>
+                             <div class="mt-4 mb-3"> <span class="text-uppercase text-muted brand">Orianz</span>
+                                 <h5 class="text-uppercase">{{data.name}}</h5>
+                                 <div class="price d-flex flex-row align-items-center"> <span class="act-price">$20</span>
+                                     <div class="ml-2"> <small class="dis-price">$59</small> <span>40% OFF</span> </div>
+                                 </div>
+                             </div>
+                             <p class="about">Shop from a wide range of t-shirt from orianz. Pefect for your everyday use, you could pair it with a stylish pair of jeans or trousers complete the look.</p>
+                             <div class="sizes mt-5">
+                                 <h6 class="text-uppercase">Size</h6> <label class="radio"> <input type="radio" name="size" value="S" checked> <span>S</span> </label> <label class="radio"> <input type="radio" name="size" value="M"> <span>M</span> </label> <label class="radio"> <input type="radio" name="size" value="L"> <span>L</span> </label> <label class="radio"> <input type="radio" name="size" value="XL"> <span>XL</span> </label> <label class="radio"> <input type="radio" name="size" value="XXL"> <span>XXL</span> </label>
+                             </div>
+                             <div class="cart mt-4 align-items-center"> <button class="btn btn-danger text-uppercase mr-2 px-4">Add to cart</button> <i class="fa fa-heart text-muted"></i> <i class="fa fa-share-alt text-muted"></i> </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+ </div>
 
     `
 
