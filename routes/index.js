@@ -88,6 +88,7 @@ router.post('/addpage', async function (req, res) {
 
 
 
+
   // await new Promise(resolve => setTimeout(resolve, 5000));
   data.forEach(data => {
 
@@ -151,6 +152,23 @@ router.post('/addcrud', async function (req, res) {
     data.push({ name: name, capname: capitalizeFirstLetter(name) })
   });
   console.log(data);
+
+
+  //index.hbs file generation 
+  data.forEach(data => {
+    let string = `
+  <a class="btn btn-primary text-white " href="/${data.name}s/"><strong>${data.name}s</strong></a>
+  <br>
+  `
+    let filename = `myapp/views/index.hbs`
+
+    fs.appendFile(filename, string, function (err) {
+      if (err) throw err;
+      console.log('Saved! index');
+    });
+
+  });
+// 
 
 
   data.forEach(data => {
@@ -421,7 +439,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-res.render('index', { title: 'Express' });
+res.render('index', {data});
 });
 \n\n
 module.exports = router;
@@ -559,15 +577,18 @@ module.exports = app;
   });
 
 router.get('/cleandir', (req, res) => {
-  const fsExtra = require('fs-extra');
-  fsExtra.emptyDirSync("./myapp/controllers/");
-  fsExtra.emptyDirSync("./myapp/routes/");
-  fsExtra.emptyDirSync("./myapp/views/forms/");
-  fsExtra.emptyDirSync("./myapp/views/pages/");
-  console.log('done');
+  cleandirectory();
   res.redirect("/crudgen");
 });
 
 module.exports = router;
 
 
+const cleandirectory = () => {
+  const fsExtra = require('fs-extra');
+  fsExtra.emptyDirSync("./myapp/controllers/");
+  fsExtra.emptyDirSync("./myapp/routes/");
+  fsExtra.emptyDirSync("./myapp/views/forms/");
+  fsExtra.emptyDirSync("./myapp/views/pages/");
+  console.log('done');
+}
