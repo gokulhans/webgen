@@ -248,7 +248,7 @@ router.post('/addcrud', async function (req, res) {
   data.forEach(data => {
     let string1 =
       `
-<a href="/users/" class="btn btn-primary m-3 text-white"><strong>Users Home</strong></a>
+<a href="/${data.name}s/" class="btn btn-primary m-3 text-white"><strong>Users Home</strong></a>
  
 <div class="center">
     <div class="center-div">
@@ -280,22 +280,11 @@ router.post('/addcrud', async function (req, res) {
     let string2 =
       `
 
-      <form class="flex flex-col max-w-md shadow-lg bg-grey-300 p-5 rounded-xl" action="/${data.name}s/edit" method="post">
-      <center class="m-5 font-bold text-lg"> Forms </center>
-          <div class="flex flex-col ">
-              <input class="p-2 my-1 border" type="text" name="name" value="{{data.name}}" placeholder="Route name...">
-              <input class="p-2 my-1 border" type="text" name="id" hidden value="{{data._id}}" placeholder="Route name...">
-          </div>
-          <div><button class="my-2 p-2 font-bold text-md border bg-green text-green-600 " type="submit">Submit</button></div>
-      
-      </form>
-          
-
-      <a href="/users/" class="btn btn-primary m-3 text-white"><strong>Users Home</strong></a>
+      <a href="/${data.name}s/" class="btn btn-primary m-3 text-white"><strong>Users Home</strong></a>
 
 <div class="center">
     <div class="center-div">
-        <form class="width container mt-3" action="/users/edit" method="post">
+        <form class="width container mt-3" action="/${data.name}s/edit" method="post">
         <center><h3 class="mb-3">Edit</h3></center>
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Name</label>
@@ -322,7 +311,7 @@ router.post('/addcrud', async function (req, res) {
     `
     let string3 =
       `
-<a href="/users/add" class="btn btn-primary m-3 text-white"><strong>Add</strong></a>
+<a href="/${data.name}s/add" class="btn btn-primary m-3 text-white"><strong>Add</strong></a>
 
 <div class="py-3">
       <div class="container">
@@ -359,7 +348,7 @@ router.post('/addcrud', async function (req, res) {
     `
     let string4 =
       `
-      <a href="/users/" class="btn btn-primary m-3 text-white"><strong>Users Home</strong></a>
+      <a href="/${data.name}s/" class="btn btn-primary m-3 text-white"><strong>Users Home</strong></a>
 
 
       <div class="container mt-5 mb-5">

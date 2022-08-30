@@ -20,7 +20,7 @@
 
   var indexRouter = require('./routes/index');
 
-   var userRouter = require('./routes/user-routes');
+   var commentRouter = require('./routes/comment-routes'); var blogRouter = require('./routes/blog-routes'); var userRouter = require('./routes/user-routes');
   
 
 // view engine setup
@@ -48,7 +48,7 @@ app.use(sessions({
 
 app.use('/', indexRouter);
 
-  app.use('/users', userRouter);
+  app.use('/blogs', blogRouter);app.use('/comments', commentRouter);app.use('/users', userRouter);
   
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
